@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "compile": "npx hardhat compile",
+    "compile": "npx hardhat clean && npx hardhat compile",
     "test": "npx hardhat test",
     "server": "npx hardhat node",
     "watch": "nodemon --watch contracts --ext sol --exec 'npm run compile'",
-    "deploy": "npx hardhat run ./scripts/deploy.ts --network sepolia",
-    "verify": "npx hardhat verify --network sepolia 0x7c0C4ad2875Ac932D1070666ABb62b0066ef4BB6"
+    "deploy": "npx hardhat run ./scripts/deploy.ts --network polygon_mumbai",
+    "verify": "npx hardhat verify --network sepolia 0x..."
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,8 @@
     "hardhat": "^2.19.4"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.1"
+    "@openzeppelin/contracts": "^5.0.1",
+    "@openzeppelin/contracts-upgradeable": "^5.0.1",
+    "@openzeppelin/hardhat-upgrades": "^3.0.5"
   }
 }
