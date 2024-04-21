@@ -4,7 +4,7 @@ import { ethers, upgrades } from "hardhat";
 
 describe("Simple", function() {
   async function deploy() {
-    const [deployer] = await ethers.getSigners();
+    const [deployer, user2] = await ethers.getSigners();
 
     const Factory = await ethers.getContractFactory("SimpleV1");
     const proxyContract = await upgrades.deployProxy(Factory, [], {
@@ -14,7 +14,7 @@ describe("Simple", function() {
 
     await proxyContract.waitForDeployment();
 
-    return { proxyContract, deployer }
+    return { proxyContract, deployer, user2 }
   }
 
   it("Initial version should be 1", async function() {
@@ -40,5 +40,14 @@ describe("Simple", function() {
 
     const version = await proxyContract.getVersion();
     expect(version).to.eq("V2");
+  })
+
+  it("Only the owner can update the contract", async function() {
+    const { proxyContract, user2 } = await loadFixture(deploy);
+
+    const SimpleV2 = await ethers.getContractFactory("SimpleV2");
+    const tx = upgrades.upgradeProxy(await proxyContract.getAddress(), SimpleV2.connect(user2));
+
+    await expect(tx).to.be.revertedWithCustomError(proxyContract, 'OwnableUnauthorizedAccount')
   })
 });
